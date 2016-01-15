@@ -299,7 +299,6 @@ configure_file(
 	${CMAKE_CURRENT_BINARY_DIR}/evhtp-config.h)
 
 add_library(evhtp ${EVHTP_LIBTYPE} ${LIBEVHTP_SOURCES} ${ONIG_SOURCES})
-message("LIBEVHTP_EXTERNAL_LIBS: ${LIBEVHTP_EXTERNAL_LIBS}")
 target_link_libraries(evhtp ${LIBEVHTP_EXTERNAL_LIBS} ${SYS_LIBS})
 
 if (EVHTP_BUILD_SHARED)
