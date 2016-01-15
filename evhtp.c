@@ -1739,7 +1739,7 @@ check_proto:
 }     /* _evhtp_create_reply */
 
 static void
-_evhtp_connection_resumecb(int fd, short events, void * arg) {
+_evhtp_connection_resumecb(evutil_socket_t fd, short events, void * arg) {
     evhtp_connection_t * c = arg;
 
     c->paused = 0;
@@ -2164,7 +2164,7 @@ _evhtp_run_in_thread(evthr_t * thr, void * arg, void * shared) {
 #endif
 
 static void
-_evhtp_accept_cb(evserv_t * serv, int fd, struct sockaddr * s, int sl, void * arg) {
+_evhtp_accept_cb(evserv_t * serv, evutil_socket_t fd, struct sockaddr * s, int sl, void * arg) {
     evhtp_t            * htp = arg;
     evhtp_connection_t * connection;
 
@@ -3245,7 +3245,7 @@ evhtp_bind_sockaddr(evhtp_t * htp, struct sockaddr * sa, size_t sin_len, int bac
     signal(SIGPIPE, SIG_IGN);
 #endif
     evutil_socket_t fd;
-    int             on = 1;
+    char            on = 1;
 
     fd = socket(sa->sa_family, SOCK_STREAM, 0);
     evhtp_errno_assert(fd != -1);
@@ -4321,14 +4321,14 @@ evhtp_connection_new_dns(evbase_t * evbase, struct evdns_base * dns_base,
         struct sockaddr_in  sin4;
         struct sockaddr_in6 sin6;
         struct sockaddr   * sin;
-        int                 salen;
+        size_t              salen;
 
-        if (inet_pton(AF_INET, addr, &sin4.sin_addr)) {
+        if (evutil_inet_pton(AF_INET, addr, &sin4.sin_addr)) {
             sin4.sin_family = AF_INET;
             sin4.sin_port   = htons(port);
             sin = (struct sockaddr *)&sin4;
             salen           = sizeof(sin4);
-        } else if (inet_pton(AF_INET6, addr, &sin6.sin6_addr)) {
+        } else if (evutil_inet_pton(AF_INET6, addr, &sin6.sin6_addr)) {
             sin6.sin6_family = AF_INET6;
             sin6.sin6_port   = htons(port);
             sin = (struct sockaddr *)&sin6;
