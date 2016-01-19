@@ -136,7 +136,7 @@
 #define xmemcpy     memcpy
 #define xmemmove    memmove
 
-#if defined(_WIN32) && !defined(__GNUC__)
+#if defined(_WIN32)
 #define xalloca     _alloca
 #define xvsnprintf  _vsnprintf
 #else

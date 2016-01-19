@@ -37,6 +37,12 @@ htp_log_connection(evhtp_connection_t * c) {
 #endif
 
 
+#if defined(_WIN32)
+#define xsnprintf  _snprintf
+#else
+#define xsnprintf  snprintf
+#endif
+
 
 
 static int                  _evhtp_request_parser_start(htparser * p);
@@ -1712,7 +1718,7 @@ check_proto:
 
     evhtp_modp_u32toa((uint32_t)code, out_buf);
 
-    sres  = snprintf(res_buf, sizeof(res_buf), "HTTP/%c.%c %s %s\r\n",
+    sres  = xsnprintf(res_buf, sizeof(res_buf), "HTTP/%c.%c %s %s\r\n",
                      major, minor, out_buf, status_code_to_str(code));
 
     if (sres >= sizeof(res_buf) || sres < 0) {
@@ -3130,7 +3136,7 @@ evhtp_send_reply_chunk_start(evhtp_request_t * request, evhtp_res code) {
             char lstr[128];
             int  sres;
 
-            sres = snprintf(lstr, sizeof(lstr), "%x\r\n",
+            sres = xsnprintf(lstr, sizeof(lstr), "%x\r\n",
                             (unsigned)evbuffer_get_length(request->buffer_out));
 
             if (sres >= sizeof(lstr) || sres < 0) {
